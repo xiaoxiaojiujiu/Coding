@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\2_grep">
+      <UniqueIdentifier>{b26fdd80-8048-4582-b2d5-777e6ad70e06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ex4_atof">
+      <UniqueIdentifier>{5f4f6c0f-437a-4a81-8763-220440fe7cef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ex10_shellsort.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ex11_reverse.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ex12_itoa.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ex13_trim.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ex1_grep.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ex2_grep.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ex3_grep_main.c">
+      <Filter>源文件\2_grep</Filter>
+    </ClCompile>
+    <ClCompile Include="ex3_grep_getline.c">
+      <Filter>源文件\2_grep</Filter>
+    </ClCompile>
+    <ClCompile Include="ex3_grep_strindex.c">
+      <Filter>源文件\2_grep</Filter>
+    </ClCompile>
+    <ClCompile Include="ex4_atof_atof.c">
+      <Filter>源文件\ex4_atof</Filter>
+    </ClCompile>
+    <ClCompile Include="ex4_atof_main.c">
+      <Filter>源文件\ex4_atof</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
