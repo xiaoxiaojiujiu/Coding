@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>植物阻拦僵尸</title>
+    <style>
+        /* 游戏区域样式 */
+        #game-container {
+            position: relative;
+            /* 添加相对定位 */
+            width: 600px;
+            margin: 0 auto;
+            border: 2px solid #ccc;
+            padding: 10px;
+        }
+
+        /* 植物格子样式 */
+        .grid-cell {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ccc;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        /* 已种植植物格子样式 */
+        .grid-cell.planted {
+            background-color: rgb(62, 235, 114);
+            position: relative;
+        }
+
+        /* 已生成的僵尸格子样式 */
+        .grid-cell.zombie {
+            background-color: rgb(235, 62, 62);
+            position: relative;
+        }
+
+        /* 游戏状态样式 */
+        #game-status {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #description1,
+        #description2 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 align="center">植物阻拦僵尸</h1>
+    <div id="description1">按下开始键开始游戏，阳光每1秒增加10点，僵尸每8秒随机出现在某一行。</div>
+    <div id="description2">消耗100点阳光种下植物以阻拦僵尸进入房子吧！剩余1000阳光则挑战成功！在控制台可以查看是否通关。</div>
+    <br></br>
+    <div id="game-container">
+        <!-- 游戏网格 -->
+        <div id="grid">
+            <!-- 添加更多的网格单元 -->
+            <!-- 游戏状态 -->
+            <div id="game-status">
+                <p>Sunlight: 100</p>
+            </div>
+            <!-- 开始按钮 -->
+            <br><button id="start-button">开始</button></br>
+        </div>
+        <script>
+            // 获取网格容器元素
+            var gridContainer = document.getElementById('grid');
+
+            // 获取游戏状态元素
+            var sunlightElement = document.querySelector('#game-status p:nth-child(1)');
+
+            // 初始阳光值
+            var sunlight = 100;
+
+            // 游戏是否开始的标志
+            var isGameStarted = false;
+
+            // 格子的行数和列数
+            var numRows = 5;
+            var numCols = 9;
+
+            // 生成网格
+            generateGrid();
+
+            // 生成网格函数
+            function generateGrid() {
+                for (var row = 0; row < numRows; row++) {
+                    for (var col = 0; col < numCols; col++) {
+                        var gridCell = document.createElement('div');
+                        gridCell.classList.add('grid-cell');
+                        gridContainer.appendChild(gridCell);
+                    }
+                    gridContainer.appendChild(document.createElement('br'));
+                }
+            }
+
+            // 监听网格单元的点击事件
+            gridContainer.addEventListener('click', function (event) {
+                var cell = event.target;
+
+                // 检查游戏是否已经开始
+                if (!isGameStarted) {
+                    console.log('请先点击开始按钮');
+                    return;
+                }
+
+                // 检查点击的是格子单元
+                if (cell.classList.contains('grid-cell')) {
+                    // 检查网格单元是否已经有植物
+                    if (cell.classList.contains('planted')) {
+                        // 如果有植物，则执行复原的逻辑
+                        cell.style.backgroundColor = 'white';
+                        cell.classList.remove('planted');
+                        console.log("已清除植物")
+                        sunlight += 100; // 每次复原植物，阳光值增加100
+                    } else {
+                        // 如果没有植物，则检查阳光是否足够
+                        if (sunlight >= 100) {
+                            // 如果阳光足够，则执行放置植物的逻辑
+                            cell.style.backgroundColor = 'green';
+                            cell.classList.add('planted');
+                            console.log("已放置植物")
+                            sunlight -= 100; // 每种植一棵豌豆射手，阳光值减少100
+                        } else {
+                            console.log('阳光不足');
+                        }
+                    }
+
+                    // 更新阳光值显示
+                    sunlightElement.textContent = 'Sunlight: ' + sunlight;
+                }
+            });
+
+            // 获取开始按钮元素
+            var startButton = document.getElementById('start-button');
+
+            // 监听开始按钮的点击事件
+            startButton.addEventListener('click', function () {
+                isGameStarted = true;
+                console.log('游戏已开始');
+
+                // 设置定时器，每秒增加10阳光
+                var timer = setInterval(function () {
+                    sunlight += 10;
+                    sunlightElement.textContent = 'Sunlight: ' + sunlight;
+
+                    if (sunlight > 1000) {
+                        console.log('恭喜，游戏通关！');
+                        clearInterval(timer);
+                        clearInterval(zombieTimer);
+                        clearInterval(moveTimer);
+                    }
+                }, 1000);
+
+
+
+                // 生成僵尸
+                generateZombie();
+            });
+
+            // 生成僵尸函数
+            function generateZombie() {
+                var moveTimer; // 用于控制僵尸移动的定时器
+
+                var zombieTimer = setInterval(function () {
+                    var zombieRowIndex = Math.floor(Math.random() * numRows);
+                    var zombieCellIndex = numCols - 1;
+                    var zombieCell = gridContainer.children[zombieRowIndex * (numCols + 1) + numCols + 3];
+                    zombieCell.style.backgroundColor = 'red';
+                    zombieCell.classList.add('zombie');
+                    zombieCell.health = 10
+                    if (sunlight > 1000) {
+                        clearInterval(zombieTimer);
+                        return;
+                    }
+
+                    // 移动僵尸
+                    moveZombie(zombieCell, zombieTimer);
+
+                }, 8000);
+            }
+
+            // 移动僵尸函数
+            function moveZombie(zombieCell, zombieTimer) {
+                var moveTimer = setInterval(function () {
+                    if (sunlight > 1000) {
+                        clearInterval(moveTimer);
+                        return;
+                    }
+
+                    var currentCellIndex = Array.from(gridContainer.children).indexOf(zombieCell);
+                    var nextCellIndex = currentCellIndex - 1;
+
+                    // 检查下一个格子是否是有效的格子
+                    if (currentCellIndex != 4 && currentCellIndex != 14 && currentCellIndex != 24 && currentCellIndex != 34 && currentCellIndex != 44) {
+                        var nextCell = gridContainer.children[nextCellIndex];
+
+                        // 检查下一个格子是否已经有植物
+                        if (nextCell.classList.contains('planted')) {
+                            // 如果下一个格子有植物，等待四秒后继续前进并消除植物
+                            clearInterval(moveTimer);
+                            setTimeout(function () {
+                                nextCell.style.backgroundColor = 'red';
+                                nextCell.classList.add('zombie');
+                                nextCell.style.transition = '';
+                                nextCell.classList.remove('planted');
+                                // 还原僵尸上一步的样式
+                                zombieCell.style.backgroundColor = '';
+                                zombieCell.classList.remove('zombie');
+
+                                // 继续移动僵尸
+                                moveZombie(nextCell, zombieTimer);
+                            }, 4000);
+                        } else {
+                            // 如果下一个格子没有植物，则移动僵尸
+                            nextCell.style.backgroundColor = 'red';
+                            nextCell.classList.add('zombie');
+                            zombieCell.style.backgroundColor = '';
+                            zombieCell.classList.remove('zombie');
+
+                            // 更新僵尸当前位置
+                            zombieCell = nextCell;
+                            console.log(currentCellIndex)
+                        }
+                    } else {
+                        // 如果到达网格边界，清除定时器和僵尸格子
+                        clearInterval(moveTimer);
+                        zombieCell.style.backgroundColor = '';
+                        zombieCell.classList.remove('zombie');
+                        console.log('游戏已结束');
+                    }
+
+                }, 2000);
+            }
+        </script>
+    </div>
+</body>
+
+</html>

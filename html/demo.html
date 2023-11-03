@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>植物大战僵尸</title>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        var canvas = document.getElementById("gameCanvas");
+        var ctx = canvas.getContext("2d");
+
+        // 绘制游戏背景
+        ctx.fillStyle = "green";
+        ctx.fillRect(0, 0, 800, 600);
+
+        // 绘制植物
+        ctx.fillStyle = "lime";
+        ctx.beginPath();
+        ctx.arc(100, 100, 50, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // 绘制僵尸
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.arc(700, 100, 50, 0, 2 * Math.PI);
+        ctx.fill();
+    </script>
+</body>
+</html>

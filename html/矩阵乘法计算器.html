@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>方阵特征多项式计算器</title>
+</head>
+<body>
+  <h1>方阵特征多项式计算器</h1>
+
+  <h2>输入三阶方阵</h2>
+  <table id="matrix3">
+    <!-- 使用 JavaScript 动态生成表格 -->
+  </table>
+
+  <button onclick="calculateCharacteristicPolynomial3()">计算特征多项式（三阶）</button>
+
+  <h2>特征多项式（三阶）</h2>
+  <div id="characteristicPolynomial3"></div>
+
+  <h2>输入四阶方阵</h2>
+  <table id="matrix4">
+    <!-- 使用 JavaScript 动态生成表格 -->
+  </table>
+
+  <button onclick="calculateCharacteristicPolynomial4()">计算特征多项式（四阶）</button>
+
+  <h2>特征多项式（四阶）</h2>
+  <div id="characteristicPolynomial4"></div>
+
+  <script>
+    function createMatrixInput(matrixId, size) {
+      var table = document.getElementById(matrixId);
+      table.innerHTML = ''; // 清空表格内容
+
+      for (var i = 0; i < size; i++) {
+        var row = document.createElement('tr');
+
+        for (var j = 0; j < size; j++) {
+          var cell = document.createElement('td');
+          var input = document.createElement('input');
+          input.type = 'number';
+          cell.appendChild(input);
+          row.appendChild(cell);
+        }
+
+        table.appendChild(row);
+      }
+    }
+
+    function readMatrix(matrixId) {
+      var table = document.getElementById(matrixId);
+      var rows = table.rows;
+      var matrix = [];
+
+      for (var i = 0; i < rows.length; i++) {
+        var cells = rows[i].cells;
+        var row = [];
+
+        for (var j = 0; j < cells.length; j++) {
+          var input = cells[j].querySelector('input');
+          var value = Number(input.value);
+          row.push(value);
+        }
+
+        matrix.push(row);
+      }
+
+      return matrix;
+    }
+
+    function calculateCharacteristicPolynomial3() {
+      var matrix = readMatrix('matrix3');
+      var coefficients = calculateCharacteristicPolynomialCoefficients(matrix);
+      var polynomial = generateCharacteristicPolynomial(coefficients);
+
+      var polynomialDiv = document.getElementById('characteristicPolynomial3');
+      polynomialDiv.textContent = polynomial;
+    }
+
+    function calculateCharacteristicPolynomial4() {
+      var matrix = readMatrix('matrix4');
+      var coefficients = calculateCharacteristicPolynomialCoefficients(matrix);
+      var polynomial = generateCharacteristicPolynomial(coefficients);
+
+      var polynomialDiv = document.getElementById('characteristicPolynomial4');
+      polynomialDiv.textContent = polynomial;
+    }
+
+    function calculateCharacteristicPolynomialCoefficients(matrix) {
+      var n = matrix.length;
+      var coefficients = [];
+
+      // 创建单位矩阵
+      var identityMatrix = [];
+      for (var i = 0; i < n; i++) {
+        var row = [];
+        for (var j = 0; j < n; j++) {
+          row.push(i === j ? 1 : 0);
+        }
+        identityMatrix.push(row);
+      }
+
+      // 计算特征多项式系数
+      for (var k = n; k >= 0; k--) {
+        var result = matrixMultiplication(matrix, identityMatrix);
+        var sum = 0;
+
+        for (var i = 0; i < n; i++) {
+          sum += result[i][i];
+        }
+
+        coefficients.push(sum);
+
+        matrix = matrixSubtraction(matrix, scalarMatrixMultiplication(sum, identityMatrix));
+      }
+
+      return coefficients;
+    }
+
+    function matrixMultiplication(matrix1, matrix2) {
+      var result = [];
+
+      for (var i = 0; i < matrix1.length; i++) {
+        var row = [];
+
+        for (var j = 0; j < matrix2[0].length; j++) {
+          var sum = 0;
+
+          for (var k = 0; k < matrix1[0].length; k++) {
+            sum += matrix1[i][k] * matrix2[k][j];
+          }
+
+          row.push(sum);
+        }
+
+        result.push(row);
+      }
+
+      return result;
+    }
+
+    function matrixSubtraction(matrix1, matrix2) {
+      var result = [];
+
+      for (var i = 0; i < matrix1.length; i++) {
+        var row = [];
+
+        for (var j = 0; j < matrix1[0].length; j++) {
+          row.push(matrix1[i][j] - matrix2[i][j]);
+        }
+
+        result.push(row);
+      }
+
+      return result;
+    }
+
+    function scalarMatrixMultiplication(scalar, matrix) {
+      var result = [];
+
+      for (var i = 0; i < matrix.length; i++) {
+        var row = [];
+
+        for (var j = 0; j < matrix[0].length; j++) {
+          row.push(scalar * matrix[i][j]);
+        }
+
+        result.push(row);
+      }
+
+      return result;
+    }
+
+    function generateCharacteristicPolynomial(coefficients) {
+      var polynomial = '';
+
+      for (var i = 0; i < coefficients.length; i++) {
+        var term = coefficients[i] + 'x';
+
+        if (i !== 0) {
+          term += '^' + (coefficients.length - i);
+        }
+
+        polynomial += term;
+      }
+
+      return polynomial;
+    }
+
+    // 初始化默认的 3x3 和 4x4 矩阵输入
+    createMatrixInput('matrix3', 3);
+    createMatrixInput('matrix4', 4);
+  </script>
+</body>
+</html>
