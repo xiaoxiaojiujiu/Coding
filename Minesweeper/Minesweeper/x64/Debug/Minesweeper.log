@@ -1,0 +1,5 @@
+﻿  game.c
+  test.c
+D:\code\C\Minesweeper\Minesweeper\test.c(33,22): warning C4013: “time”未定义；假设外部返回 int
+  正在生成代码...
+  Minesweeper.vcxproj -> D:\code\C\Minesweeper\x64\Debug\Minesweeper.exe
